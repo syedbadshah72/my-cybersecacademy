@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSec Academy — Professional Security Training</title>
+    <style>
+        /* ============================================
+                   BASE & RESET
+                   ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --red: #dc143c;
+            --red-dark: #8b0000;
+            --red-glow: rgba(220, 20, 60, 0.3);
+            --blue: #1e90ff;
+            --blue-dark: #0a2e5c;
+            --blue-glow: rgba(30, 144, 255, 0.3);
+            --bg: #0a0a12;
+            --bg2: #111122;
+            --bg3: #1a1a2e;
+            --text: #e0e0f0;
+            --dim: #7a7a9a;
+            --card: #12121e;
+            --border: rgba(255, 255, 255, 0.05);
+            --font-mono: 'Courier New', 'Consolas', monospace;
+            --font-sans: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ============================================
+                   SCROLLBAR
+                   ============================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--red);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--blue);
+        }
+
+        /* ============================================
+                   HEADER
+                   ============================================ */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 18, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--red), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .logo span {
+            -webkit-text-fill-color: var(--dim);
+        }
+
+        nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        nav a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-family: var(--font-mono);
+            transition: color 0.2s;
+        }
+        nav a:hover {
+            color: var(--text);
+        }
+        nav a.active {
+            color: var(--red);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        /* ============================================
+                   HERO
+                   ============================================ */
+        .hero {
+            margin-top: 64px;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 24px 40px;
+            background:
+                radial-gradient(ellipse at 30% 50%, rgba(220, 20, 60, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(30, 144, 255, 0.06) 0%, transparent 60%);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+        .hero h1 .r {
+            color: var(--red);
+            text-shadow: 0 0 40px var(--red-glow);
+        }
+        .hero h1 .b {
+            color: var(--blue);
+            text-shadow: 0 0 40px var(--blue-glow);
+        }
+        .hero h1 .d {
+            color: var(--dim);
+        }
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--dim);
+            max-width: 640px;
+            margin-bottom: 8px;
+        }
+        .hero .badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 6px 18px;
+            border: 1px solid var(--red);
+            color: var(--red);
+            border-radius: 20px;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+        .hero .stats {
+            display: flex;
+            gap: 32px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .hero .stats .stat {
+            text-align: center;
+        }
+        .hero .stats .stat .num {
+            font-family: var(--font-mono);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .hero .stats .stat .label {
+            font-size: 0.75rem;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* ============================================
+                   SEARCH / FILTER BAR
+                   ============================================ */
+        .toolbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 24px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .toolbar input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg2);
+            color: var(--text);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+        .toolbar input:focus {
+            border-color: var(--blue);
+        }
+        .toolbar input::placeholder {
+            color: var(--dim);
+        }
+        .toolbar select {
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg2);
+            color: var(--text);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+        }
+        .toolbar select:focus {
+            border-color: var(--red);
+        }
+        .toolbar .count {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--dim);
+            margin-left: auto;
+        }
+
+        /* ============================================
+                   COURSE GRID
+                   ============================================ */
+        .courses {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .course-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            transition: all 0.3s;
+        }
+        .course-card.red::before {
+            background: var(--red);
+            box-shadow: 0 0 20px var(--red-glow);
+        }
+        .course-card.blue::before {
+            background: var(--blue);
+            box-shadow: 0 0 20px var(--blue-glow);
+        }
+        .course-card.purple::before {
+            background: #8b5cf6;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+        .course-card.green::before {
+            background: #00e676;
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.3);
+        }
+        .course-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .course-card .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+        }
+        .course-card .meta .lang {
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .course-card .meta .lang.java {
+            background: rgba(220, 20, 60, 0.15);
+            color: var(--red);
+        }
+        .course-card .meta .lang.python {
+            background: rgba(30, 144, 255, 0.15);
+            color: var(--blue);
+        }
+        .course-card .meta .lang.cpp {
+            background: rgba(139, 92, 246, 0.15);
+            color: #8b5cf6;
+        }
+        .course-card .meta .lang.html {
+            background: rgba(0, 230, 118, 0.15);
+            color: #00e676;
+        }
+        .course-card .meta .lang.general {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--dim);
+        }
+        .course-card .meta .level {
+            color: var(--dim);
+        }
+
+        .course-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        .course-card p {
+            font-size: 0.8rem;
+            color: var(--dim);
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+        .course-card .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+        }
+        .course-card .footer .duration {
+            color: var(--dim);
+        }
+        .course-card .footer .btn {
+            padding: 6px 16px;
+            border-radius: 6px;
+            border: none;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .course-card .footer .btn.red-btn {
+            background: var(--red);
+            color: #fff;
+        }
+        .course-card .footer .btn.red-btn:hover {
+            background: var(--red-dark);
+            box-shadow: 0 0 20px var(--red-glow);
+        }
+        .course-card .footer .btn.blue-btn {
+            background: var(--blue);
+            color: #fff;
+        }
+        .course-card .footer .btn.blue-btn:hover {
+            background: var(--blue-dark);
+            box-shadow: 0 0 20px var(--blue-glow);
+        }
+
+        /* ============================================
+                   NO RESULTS
+                   ============================================ */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--dim);
+            font-family: var(--font-mono);
+        }
+        .no-results h2 {
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        /* ============================================
+                   ABOUT / SECTIONS
+                   ============================================ */
+        .about {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 24px;
+            border-top: 1px solid var(--border);
+        }
+        .about h2 {
+            font-size: 1.8rem;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .about h2 .r {
+            color: var(--red);
+        }
+        .about h2 .b {
+            color: var(--blue);
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+        .about-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px;
+            text-align: center;
+        }
+        .about-card .icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+        .about-card h3 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+        .about-card p {
+            font-size: 0.8rem;
+            color: var(--dim);
+        }
+
+        /* ============================================
+                   FOOTER
+                   ============================================ */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 30px 24px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--dim);
+        }
+        footer .auth-badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 4px 14px;
+            border: 1px solid #00e676;
+            color: #00e676;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+        footer a {
+            color: var(--blue);
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ============================================
+                   RESPONSIVE
+                   ============================================ */
+        @media (max-width: 768px) {
+            nav a {
+                display: none;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .hero .stats .stat .num {
+                font-size: 1.4rem;
+            }
+            .toolbar {
+                flex-direction: column;
+            }
+            .toolbar .count {
+                margin-left: 0;
+            }
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 0 16px;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="logo">CyberSec<span>Academy</span></div>
+        <nav>
+            <a href="#" class="active">[courses]</a>
+            <a href="#about">[about]</a>
+            <a href="#">[labs]</a>
+            <a href="#">[community]</a>
+            <button class="hamburger" onclick="alert('Mobile nav placeholder')">
+                <span></span><span></span><span></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <h1>
+            <span class="r">Offensive</span>
+            <span class="d"> &amp; </span>
+            <span class="b">Defensive</span><br>
+            <span style="font-size:0.5em; font-weight:300; color:var(--dim);">
+                Authorized Security Training Platform
+            </span>
+        </h1>
+        <p>
+            1000+ hands-on courses covering penetration testing, exploit development,
+            reverse engineering, threat hunting, and blue team operations.
+        </p>
+        <span class="badge">#AUTHORIZED_PENTEST_TRAINING</span>
+        <div class="stats">
+            <div class="stat">
+                <div class="num" id="course-count">1,024</div>
+                <div class="label">Courses</div>
+            </div>
+            <div class="stat">
+                <div class="num">47</div>
+                <div class="label">Languages &amp; Tools</div>
+            </div>
+            <div class="stat">
+                <div class="num">12K+</div>
+                <div class="label">Lab Hours</div>
+            </div>
+            <div class="stat">
+                <div class="num">4.9</div>
+                <div class="label">Rating</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TOOLBAR ===== -->
+    <div class="toolbar">
+        <input type="text" id="search" placeholder="[ search courses by name, language, or topic... ]" oninput="filterCourses()">
+        <select id="filter-lang" onchange="filterCourses()">
+            <option value="all">[ all languages ]</option>
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <option value="cpp">C++</option>
+            <option value="html">HTML/JS</option>
+            <option value="general">General / Theory</option>
+        </select>
+        <select id="filter-level" onchange="filterCourses()">
+            <option value="all">[ all levels ]</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+        </select>
+        <div class="count" id="result-count">1,024 courses</div>
+    </div>
+
+    <!-- ===== COURSE GRID ===== -->
+    <section class="courses">
+        <div class="course-grid" id="course-grid"></div>
+        <div class="no-results" id="no-results" style="display:none;">
+            <h2>// NO_MATCHING_COURSES</h2>
+            <p>Try a different search or filter.</p>
+        </div>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section class="about" id="about">
+        <h2>Built with <span class="r">Java</span> · <span class="b">Python</span> · <span style="color:#8b5cf6;">C++</span> · <span style="color:#00e676;">HTML/JS</span></h2>
+        <div class="about-grid">
+            <div class="about-card">
+                <div class="icon">☕</div>
+                <h3>Java Backend</h3>
+                <p>Spring Boot microservices for course delivery, user auth, and lab orchestration.</p>
+            </div>
+            <div class="about-card">
+                <div class="icon">🐍</div>
+                <h3>Python Engine</h3>
+                <p>Automated lab grading, exploit PoC generation, CTF challenge infrastructure.</p>
+            </div>
+            <div class="about-card">
+                <div class="icon">⚙️</div>
+                <h3>C++ Tooling</h3>
+                <p>High-performance packet capture, binary analysis, and fuzzing frameworks.</p>
+            </div>
+            <div class="about-card">
+                <div class="icon">🌐</div>
+                <h3>HTML/JS Frontend</h3>
+                <p>Interactive labs, real-time terminal emulation, and dashboard visualizations.</p>
+            </div>
+            <div class="about-card">
+                <div class="icon">🛡️</div>
+                <h3>Authorized Only</h3>
+                <p>All training materials are for authorized cybersecurity professionals with explicit permission.</p>
+            </div>
+            <div class="about-card">
+                <div class="icon">📊</div>
+                <h3>1,024+ Courses</h3>
+                <p>From beginner OSINT to advanced kernel exploitation and purple team exercises.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="auth-badge">✓ AUTHORIZED PENTEST TRAINING ENVIRONMENT</div>
+        <p>
+            CyberSec Academy — Professional Cybersecurity Education<br>
+            <span style="font-size:0.7rem;">
+                All content is for authorized security professionals only.
+                Unauthorized use is prohibited by law.
+            </span>
+            <br><br>
+            <a href="#">Terms of Service</a> · <a href="#">Authorization Policy</a>
+        </p>
+    </footer>
+
+    <script>
+        // ================================================================
+        //   COURSE DATA — 100+ UNIQUE COURSES (generated programmatically
+        //   to demonstrate the pattern; expands to 1000+ via code below)
+        // ================================================================
+
+        const LANGUAGES = ['python', 'java', 'cpp', 'html', 'general'];
+        const LEVELS = ['beginner', 'intermediate', 'advanced'];
+        const LANGS_DISPLAY = {
+            python: { label: 'Python', cls: 'python' },
+            java: { label: 'Java', cls: 'java' },
+            cpp: { label: 'C++', cls: 'cpp' },
+            html: { label: 'HTML/JS', cls: 'html' },
+            general: { label: 'General', cls: 'general' },
+        };
+        const COLOR_MAP = {
+            python: 'blue',
+            java: 'red',
+            cpp: 'purple',
+            html: 'green',
+            general: 'blue',
+        };
+
+        const TOPICS = [
+            'Network Penetration Testing',
+            'Web Application Security',
+            'Exploit Development',
+            'Reverse Engineering',
+            'Malware Analysis',
+            'Buffer Overflow Exploitation',
+            'SQL Injection Mastery',
+            'Cross-Site Scripting (XSS)',
+            'Cross-Site Request Forgery',
+            'Server-Side Request Forgery',
+            'Authentication Bypass Techniques',
+            'Session Hijacking & Fixation',
+            'Privilege Escalation (Linux)',
+            'Privilege Escalation (Windows)',
+            'Active Directory Attacks',
+            'Kerberos Exploitation',
+            'NTLM Relay Attacks',
+            'Phishing Operations',
+            'Social Engineering Framework',
+            'OSINT & Reconnaissance',
+            'Subdomain Enumeration',
+            'Port Scanning & Fingerprinting',
+            'Vulnerability Scanning',
+            'Fuzzing with AFL++',
+            'Binary Exploitation (ROP)',
+            'Heap Exploitation',
+            'Kernel Exploitation',
+            'Windows API Hooking',
+            'Sysinternals Suite Mastery',
+            'PowerShell for Offense',
+            'C2 Framework Development',
+            'Meterpreter Advanced Usage',
+            'Cobalt Strike Beaconing',
+            'Sliver C2 Operations',
+            'Brute Force & Credential Stuffing',
+            'Hash Cracking (Hashcat)',
+            'Password Spraying',
+            'Wireless Network Attacks',
+            'Bluetooth Exploitation',
+            'IoT Security Assessment',
+            'Mobile Application Security (Android)',
+            'Mobile Application Security (iOS)',
+            'API Security Testing',
+            'GraphQL Vulnerability Assessment',
+            'Cloud Security (AWS)',
+            'Cloud Security (Azure)',
+            'Docker & Container Security',
+            'Kubernetes Penetration Testing',
+            'Terraform Security Review',
+            'CI/CD Pipeline Exploitation',
+            'Supply Chain Attack Simulation',
+            'Ransomware Reverse Engineering',
+            'Rootkit Development',
+            'Bootkit & UEFI Attacks',
+            'Firmware Analysis',
+            'Side-Channel Attacks',
+            'Timing Attacks on Cryptography',
+            'JWT Manipulation',
+            'OAuth 2.0 Exploitation',
+            'SAML Injection',
+            'LDAP Injection',
+            'NoSQL Injection',
+            'Command Injection',
+            'File Inclusion (LFI/RFI)',
+            'File Upload Vulnerability',
+            'XML External Entities (XXE)',
+            'Server-Side Template Injection',
+            'Race Condition Exploitation',
+            'Format String Vulnerabilities',
+            'Integer Overflow Exploitation',
+            'Use-After-Free',
+            'Dangling Pointer Exploitation',
+            'Shellcode Development',
+            'Anti-Virus Evasion',
+            'EDR Bypass Techniques',
+            'AMSI Bypass',
+            'Process Injection (All Types)',
+            'DLL Sideloading',
+            'Reflective DLL Injection',
+            'Indirect Syscalls',
+            'Call Stack Spoofing',
+            'Signed Binary Proxy Execution',
+            'LOLBins & LOLScripts',
+            'M365 / Azure AD Attacks',
+            'On-Prem to Cloud Pivot',
+            'Threat Hunting Fundamentals',
+            'SIEM Rule Development (Splunk)',
+            'Elastic Stack Security Analytics',
+            'Network Forensics',
+            'Memory Forensics (Volatility)',
+            'Disk Forensics (Autopsy)',
+            'Incident Response Playbooks',
+            'Log Analysis & Correlation',
+            'YARA Rule Writing',
+            'Sigma Rule Development',
+            'MITRE ATT&CK Mapping',
+            'Purple Team Exercises',
+            'Adversary Emulation Planning',
+            'Red Team Infrastructure Setup',
+            'Phishing Infrastructure (GoPhish)',
+            'Domain Fronting & CDN Bypass',
+            'Traffic Encryption & Obfuscation',
+            'Payload Staging Techniques',
+            'Living Off the Land Binaries',
+            'Evasion via DNS Tunneling',
+            'ICMP Exfiltration',
+            'HTTP/S Covert Channels',
+            'WebSocket Exploitation',
+            'gRPC Security Testing',
+            'Thick Client Penetration Testing',
+            'Game Hacking & Anti-Cheat Bypass',
+            'Blockchain Smart Contract Auditing',
+            'DeFi Exploitation',
+            'Secure Code Review (C/C++)',
+            'Secure Code Review (Java)',
+            'Secure Code Review (Python)',
+            'Secure Code Review (JavaScript)',
+        ];
+
+        // Expand to 1000+ courses by combining topics with variations
+        const VARIANTS = [
+            'Fundamentals', 'Advanced Techniques', 'Hands-On Lab',
+            'Capture the Flag', 'Real-World Scenarios', 'Tool Deep Dive',
+            'Scripting & Automation', 'From Scratch', 'Masterclass',
+            'Bootcamp', 'Crash Course', 'Deep Dive', 'Essentials',
+            'Expert Level', 'Case Studies', 'Workshop',
+        ];
+
+        const EXTRA_TOPICS = [];
+        // Generate additions
+        for (let i = 0; i < 200; i++) {
+            EXTRA_TOPICS.push(`Security Topic #${i + 100} — Specialized Module`);
+        }
+        const ALL_TOPICS = [...TOPICS, ...EXTRA_TOPICS];
+
+        function generateCourses(count) {
+            const courses = [];
+            let id = 1;
+            for (let t = 0; t < ALL_TOPICS.length && courses.length < count; t++) {
+                const topic = ALL_TOPICS[t];
+                const numVariants = Math.min(VARIANTS.length, Math.max(1, Math.floor(count / ALL_TOPICS.length) + 1));
+                for (let v = 0; v < numVariants && courses.length < count; v++) {
+                    const lang = LANGUAGES[t % LANGUAGES.length];
+                    const level = LEVELS[t % LEVELS.length];
+                    const variant = VARIANTS[v % VARIANTS.length];
+                    const title = `${topic}: ${variant}`;
+                    const desc = `Comprehensive ${level} training on ${topic.toLowerCase()} using ${LANGS_DISPLAY[lang].label}. Includes hands-on labs, PoC code, and real-world scenarios.`;
+                    const dur = `${1 + Math.floor(Math.random() * 8)}h ${Math.random() > 0.5 ? '30m' : '00m'}`;
+                    courses.push({
+                        id: id++,
+                        title,
+                        desc,
+                        lang,
+                        level,
+                        duration: dur,
+                    });
+                }
+            }
+            // Fill remaining
+            while (courses.length < count) {
+                const t = courses.length % ALL_TOPICS.length;
+                const l = LANGUAGES[courses.length % LANGUAGES.length];
+                const lv = LEVELS[courses.length % LEVELS.length];
+                courses.push({
+                    id: id++,
+                    title: `${ALL_TOPICS[t]}: Module ${courses.length + 1}`,
+                    desc: `Extended ${lv} module on ${ALL_TOPICS[t].toLowerCase()} using ${LANGS_DISPLAY[l].label}.`,
+                    lang: l,
+                    level: lv,
+                    duration: `${2 + Math.floor(Math.random() * 6)}h`,
+                });
+            }
+            return courses;
+        }
+
+        // ================================================================
+        //   RENDER
+        // ================================================================
+
+        const ALL_COURSES = generateCourses(1024);
+        let filtered = [...ALL_COURSES];
+
+        function renderCourses(courses) {
+            const grid = document.getElementById('course-grid');
+            const noRes = document.getElementById('no-results');
+            const countEl = document.getElementById('result-count');
+
+            if (courses.length === 0) {
+                grid.innerHTML = '';
+                noRes.style.display = 'block';
+                countEl.textContent = '0 courses';
+                return;
+            }
+
+            noRes.style.display = 'none';
+            countEl.textContent = `${courses.length} course${courses.length !== 1 ? 's' : ''}`;
+
+            let html = '';
+            for (const c of courses) {
+                const langInfo = LANGS_DISPLAY[c.lang];
+                const colorClass = COLOR_MAP[c.lang];
+                html += `
+                    <div class="course-card ${colorClass}">
+                        <div class="meta">
+                            <span class="lang ${langInfo.cls}">${langInfo.label}</span>
+                            <span class="level">[${c.level}]</span>
+                        </div>
+                        <h3>${c.title}</h3>
+                        <p>${c.desc}</p>
+                        <div class="footer">
+                            <span class="duration">${c.duration}</span>
+                            <button class="btn ${colorClass}-btn" onclick="alert('Course #${c.id}: ${c.title.replace(/'/g, "\\'")}')">access</button>
+                        </div>
+                    </div>
+                `;
+            }
+            grid.innerHTML = html;
+        }
+
+        // ================================================================
+        //   FILTER
+        // ================================================================
+
+        function filterCourses() {
+            const search = document.getElementById('search').value.toLowerCase().trim();
+            const lang = document.getElementById('filter-lang').value;
+            const level = document.getElementById('filter-level').value;
+
+            filtered = ALL_COURSES.filter(c => {
+                if (lang !== 'all' && c.lang !== lang) return false;
+                if (level !== 'all' && c.level !== level) return false;
+                if (search) {
+                    const haystack = `${c.title} ${c.desc} ${c.lang} ${c.level}`.toLowerCase();
+                    return haystack.includes(search);
+                }
+                return true;
+            });
+
+            renderCourses(filtered);
+        }
+
+        // ================================================================
+        //   INIT
+        // ================================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCourses(ALL_COURSES);
+            document.getElementById('course-count').textContent = ALL_COURSES.length.toLocaleString();
+
+            // Prefill search from URL if any
+            const params = new URLSearchParams(window.location.search);
+            const q = params.get('q');
+            if (q) {
+                document.getElementById('search').value = q;
+                filterCourses();
+            }
+        });
+
+        console.log('%c[CyberSec Academy]', 'color: #dc143c; font-size:1.4rem; font-weight:bold;');
+        console.log(`%cLoaded ${ALL_COURSES.length} courses across ${LANGUAGES.length} language tracks.`, 'color:#1e90ff;');
+        console.log('%cAuthorized security training environment.', 'color:#7a7a9a;');
+    </script>
+
+</body>
+</html>
